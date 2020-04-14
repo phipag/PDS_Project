@@ -4,7 +4,7 @@ import os
 import pickle
 
 
-def read_file(path=os.path.join(get_data_path(), "input/IRIS.csv")):
+def read_file(path=os.path.join(get_data_path(), "input/<My_data>.csv")):
     try:
         df = pd.read_csv(path)
         return df
