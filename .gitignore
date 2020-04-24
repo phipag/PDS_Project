@@ -128,3 +128,6 @@ dmypy.json
 .idea
 .vscode
 .atom
+
+# Data files
+*.csv
