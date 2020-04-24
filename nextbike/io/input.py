@@ -3,7 +3,7 @@ import pickle
 
 import pandas as pd
 
-from .utils import get_data_path
+from nextbike.io.utils import get_data_path
 
 
 def read_file(path=os.path.join(get_data_path(), "input/<My_data>.csv"), **kwargs):

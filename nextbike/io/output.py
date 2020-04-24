@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from .utils import get_data_path
+from nextbike.io.utils import get_data_path
 
 
 def save_model(model):

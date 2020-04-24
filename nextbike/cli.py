@@ -1,6 +1,6 @@
 import click
 
-from . import model
+from nextbike import model
 
 
 @click.command()

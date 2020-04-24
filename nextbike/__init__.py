@@ -1,2 +1,4 @@
-from . import io
-from . import model
+from nextbike import (
+    io,
+    model
+)

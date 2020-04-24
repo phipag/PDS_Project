@@ -1,6 +1,6 @@
 from sklearn.linear_model import LinearRegression
 
-from .. import io
+from nextbike import io
 
 
 def train():
