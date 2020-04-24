@@ -5,7 +5,7 @@ from nextbike import io
 
 def train():
     lin = LinearRegression()
-    print("Linear model created")
-    print("Training...")
+    print('Linear model created')
+    print('Training...')
 
     io.save_model(lin)
