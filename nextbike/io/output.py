@@ -1,6 +1,7 @@
-from .utils import get_data_path
 import os
 import pickle
+
+from .utils import get_data_path
 
 
 def save_model(model):

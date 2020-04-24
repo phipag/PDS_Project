@@ -1,12 +1,14 @@
-from .utils import get_data_path
-import pandas as pd
 import os
 import pickle
 
+import pandas as pd
 
-def read_file(path=os.path.join(get_data_path(), "input/<My_data>.csv")):
+from .utils import get_data_path
+
+
+def read_file(path=os.path.join(get_data_path(), "input/<My_data>.csv"), **kwargs):
     try:
-        df = pd.read_csv(path)
+        df = pd.read_csv(path, **kwargs)
         return df
     except FileNotFoundError:
         print("Data file not found. Path was " + path)
