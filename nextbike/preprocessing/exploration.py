@@ -7,4 +7,8 @@ from nextbike.io import (
 
 
 def load_df():
-    return read_file(os.path.join(get_data_path(), 'input/mannheim.csv'))
+    return read_file(
+        os.path.join(get_data_path(), 'input/mannheim.csv'),
+        index_col=0,
+        parse_dates=['datetime'],
+    )
