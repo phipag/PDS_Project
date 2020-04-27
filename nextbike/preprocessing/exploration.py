@@ -12,3 +12,5 @@ def load_df():
         index_col=0,
         parse_dates=['datetime'],
     )
+
+# TODO: Move the Jupyter Notebook functions in this module
