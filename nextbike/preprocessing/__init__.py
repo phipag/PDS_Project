@@ -1,3 +1,3 @@
-from nextbike.preprocessing.exploration import (
-    load_df
+from nextbike.preprocessing.Preprocessor import (
+    Preprocessor
 )
