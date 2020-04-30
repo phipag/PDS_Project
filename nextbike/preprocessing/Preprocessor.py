@@ -7,11 +7,11 @@ from nextbike.io import (
     get_data_path,
     read_file
 )
+from .AbstractValidator import AbstractValidator
 
 
-class Preprocessor:
-    def __init__(self):
-        self.__gdf: gpd.GeoDataFrame | None = None
+class Preprocessor(AbstractValidator):
+    __gdf: gpd.GeoDataFrame | None = None
 
     @property
     def gdf(self) -> gpd.GeoDataFrame:
@@ -23,7 +23,7 @@ class Preprocessor:
         df = read_file(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
         self.__gdf = gpd.GeoDataFrame(df, crs='EPSG:4326', geometry=gpd.points_from_xy(df['p_lng'], df['p_lat']))
 
-    def clean_gdf(self) -> None:
+    def clean_gdf(self, validate=False) -> None:
         # Fill NaN values with 0 and drop double bookings
         self.__gdf.fillna(0, inplace=True)
         self.__gdf.drop_duplicates(subset=['b_number', 'datetime'], inplace=True)
@@ -36,8 +36,14 @@ class Preprocessor:
         self.__gdf = self.__gdf[(self.__gdf['trip'] != 'first') & (self.__gdf['trip'] != 'last')]
         # Remove trips without corresponding start or end booking
         self.__fix_bookings()
-        # TODO: Add a validator functionality here which throws an error if there is a start end trip mismatch
-        #  (useful for CLI)
+        if validate:
+            self.validate()
+
+    def validate(self):
+        if self.__gdf is None:
+            raise ValueError('Cannot validate data frame of None type. Please load a data frame first.')
+        pass
+        # TODO: Implement validation logic
 
     def __fix_bookings(self) -> None:
         # Sort the data frame by b_number and datetime to have the bookings for each according to the timeline
