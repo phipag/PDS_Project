@@ -24,18 +24,20 @@ class Preprocessor:
         self.__gdf = gpd.GeoDataFrame(df, crs='EPSG:4326', geometry=gpd.points_from_xy(df['p_lng'], df['p_lat']))
 
     def clean_gdf(self) -> None:
-        # Drop duplicates and fill NaN values with 0
-        self.__gdf.drop_duplicates(inplace=True)
+        # Fill NaN values with 0 and drop double bookings
         self.__gdf.fillna(0, inplace=True)
+        self.__gdf.drop_duplicates(subset=['b_number', 'datetime'], inplace=True)
         # Load the GeoJSON boundary of Mannheim
         mannheim_boundary_gdf = gpd.read_file(os.path.join(get_data_path(), 'input/mannheim_boundary.geojson'),
                                               crs='EPSG:4326')
-        # Remove all trips which are not within Mannheim
+        # Remove all trips which are not within Mannheim (using shapely is faster than geopandas' spatial join)
         self.__gdf = self.__gdf[self.__gdf.within(mannheim_boundary_gdf['geometry'][0])]
         # Remove all trips of type 'first' and 'last'
         self.__gdf = self.__gdf[(self.__gdf['trip'] != 'first') & (self.__gdf['trip'] != 'last')]
         # Remove trips without corresponding start or end booking
         self.__fix_bookings()
+        # TODO: Add a validator functionality here which throws an error if there is a start end trip mismatch
+        #  (useful for CLI)
 
     def __fix_bookings(self) -> None:
         # Sort the data frame by b_number and datetime to have the bookings for each according to the timeline
