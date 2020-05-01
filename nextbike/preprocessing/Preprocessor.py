@@ -7,11 +7,11 @@ from nextbike.io import (
     get_data_path,
     read_file
 )
-from .AbstractValidator import AbstractValidator
+from nextbike.preprocessing.AbstractValidator import AbstractValidator
 
 
 class Preprocessor(AbstractValidator):
-    __gdf: gpd.GeoDataFrame | None = None
+    __gdf: gpd.GeoDataFrame = None
 
     @property
     def gdf(self) -> gpd.GeoDataFrame:

@@ -1,3 +1,1 @@
-from nextbike.preprocessing.Preprocessor import (
-    Preprocessor
-)
+from nextbike.preprocessing.Preprocessor import Preprocessor
