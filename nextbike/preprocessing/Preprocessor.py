@@ -5,7 +5,7 @@ import numpy as np
 
 from nextbike.io import (
     get_data_path,
-    read_file
+    read_df
 )
 from nextbike.preprocessing.AbstractValidator import AbstractValidator
 
@@ -20,7 +20,7 @@ class Preprocessor(AbstractValidator):
         return self.__gdf
 
     def load_gdf(self) -> None:
-        df = read_file(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
+        df = read_df(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
         self.__gdf = gpd.GeoDataFrame(df, crs='EPSG:4326', geometry=gpd.points_from_xy(df['p_lng'], df['p_lat']))
 
     def clean_gdf(self, validate=False) -> None:
