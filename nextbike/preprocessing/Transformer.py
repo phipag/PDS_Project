@@ -1,5 +1,8 @@
+import os
+
 import geopandas as gpd
 
+from nextbike.io import get_data_path
 from nextbike.preprocessing.AbstractValidator import AbstractValidator
 from nextbike.preprocessing.Preprocessor import Preprocessor
 
@@ -37,7 +40,13 @@ class Transformer(AbstractValidator):
         if validate:
             self.validate()
 
+    def save(self):
+        self.__gdf.to_csv(os.path.join(get_data_path(), 'output/mannheim_transformed.csv'), index=False)
+
     def validate(self) -> bool:
+        if self.__gdf is None:
+            raise ValueError('Cannot validate data frame of None type. Please transform the data frame first.')
+
         if len(self.__gdf) != len(self.__preprocessor.gdf) / 2:
             raise ValueError('Length of transformed data frame is expected to be half of the preprocessed data frame.')
         return True
