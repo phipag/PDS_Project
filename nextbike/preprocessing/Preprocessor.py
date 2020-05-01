@@ -27,23 +27,32 @@ class Preprocessor(AbstractValidator):
         # Fill NaN values with 0 and drop double bookings
         self.__gdf.fillna(0, inplace=True)
         self.__gdf.drop_duplicates(subset=['b_number', 'datetime'], inplace=True)
+        # Remove all trips of type 'first' and 'last'
+        self.__gdf = self.__gdf[(self.__gdf['trip'] != 'first') & (self.__gdf['trip'] != 'last')]
         # Load the GeoJSON boundary of Mannheim
         mannheim_boundary_gdf = gpd.read_file(os.path.join(get_data_path(), 'input/mannheim_boundary.geojson'),
                                               crs='EPSG:4326')
         # Remove all trips which are not within Mannheim (using shapely is faster than geopandas' spatial join)
         self.__gdf = self.__gdf[self.__gdf.within(mannheim_boundary_gdf['geometry'][0])]
-        # Remove all trips of type 'first' and 'last'
-        self.__gdf = self.__gdf[(self.__gdf['trip'] != 'first') & (self.__gdf['trip'] != 'last')]
         # Remove trips without corresponding start or end booking
         self.__fix_bookings()
         if validate:
             self.validate()
 
-    def validate(self):
+    def validate(self) -> None:
         if self.__gdf is None:
             raise ValueError('Cannot validate data frame of None type. Please load a data frame first.')
-        pass
-        # TODO: Implement validation logic
+
+        trips = np.array(self.__gdf['trip'])
+        b_numbers = np.array(self.__gdf['b_number'])
+        for i in range(len(trips) - 1):
+            if trips[i] == 'start' and trips[i + 1] == 'end' and b_numbers[i] != b_numbers[i + 1]:
+                raise ValueError(
+                    'Validation error at index {}: The first booking of a bike cannot start with trip type '
+                    '\'end\'.'.format(i))
+            if trips[i] == trips[i + 1]:
+                raise ValueError('Validation error at index {}: Two consecutive rows should not have the same trip '
+                                 'type.'.format(i))
 
     def __fix_bookings(self) -> None:
         # Sort the data frame by b_number and datetime to have the bookings for each according to the timeline
