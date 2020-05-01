@@ -39,7 +39,7 @@ class Preprocessor(AbstractValidator):
         if validate:
             self.validate()
 
-    def validate(self) -> None:
+    def validate(self) -> bool:
         if self.__gdf is None:
             raise ValueError('Cannot validate data frame of None type. Please load a data frame first.')
 
@@ -53,6 +53,7 @@ class Preprocessor(AbstractValidator):
             if trips[i] == trips[i + 1]:
                 raise ValueError('Validation error at index {}: Two consecutive rows should not have the same trip '
                                  'type.'.format(i))
+        return True
 
     def __fix_bookings(self) -> None:
         # Sort the data frame by b_number and datetime to have the bookings for each according to the timeline
