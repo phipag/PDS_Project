@@ -6,5 +6,5 @@ from abc import (
 
 class AbstractValidator(ABC):
     @abstractmethod
-    def validate(self):
+    def validate(self) -> bool:
         pass
