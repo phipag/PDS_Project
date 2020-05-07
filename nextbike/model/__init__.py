@@ -1,3 +1,1 @@
-from nextbike.model.model import (
-    train
-)
+from nextbike.model.model import train
