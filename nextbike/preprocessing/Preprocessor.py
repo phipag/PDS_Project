@@ -11,19 +11,36 @@ from nextbike.preprocessing.AbstractValidator import AbstractValidator
 
 
 class Preprocessor(AbstractValidator):
+    """
+    This class handles the preprocessing of the NextBike data.
+    """
     __gdf: gpd.GeoDataFrame = None
 
     @property
     def gdf(self) -> gpd.GeoDataFrame:
+        """
+        A computed property checking if the GeoDataFrame is initialized and returning it if initialized
+        :return: GeoDataFrame
+        :raises: UserWarning
+        """
         if self.__gdf is None:
             raise UserWarning('Data frame is not initialized.')
         return self.__gdf
 
     def load_gdf(self) -> None:
+        """
+        Reads the raw DataFrame, transforms it to a GeoDataFrame and initializes the __gdf property.
+        :return: None
+        """
         df = read_df(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
         self.__gdf = gpd.GeoDataFrame(df, crs='EPSG:4326', geometry=gpd.points_from_xy(df['p_lng'], df['p_lat']))
 
-    def clean_gdf(self, validate=False) -> None:
+    def clean_gdf(self, validate: bool = False) -> None:
+        """
+        Cleans the GeoDataFrame so that it contains valid booking but still in the original format.
+        :param bool validate: Indicates whether a validation post-hook should be run or not.
+        :return: None
+        """
         # Fill NaN values with 0 and drop double bookings
         self.__gdf.fillna(0, inplace=True)
         self.__gdf.drop_duplicates(subset=['b_number', 'datetime'], inplace=True)
@@ -40,6 +57,11 @@ class Preprocessor(AbstractValidator):
             self.validate()
 
     def validate(self) -> bool:
+        """
+        Validates whether the GeoDataFrame has a semantically and syntactically correct structure.
+        :return: bool
+        :raises: ValueError
+        """
         if self.__gdf is None:
             raise ValueError('Cannot validate data frame of None type. Please load a data frame first.')
 
@@ -56,6 +78,10 @@ class Preprocessor(AbstractValidator):
         return True
 
     def __fix_bookings(self) -> None:
+        """
+        Applies an algorithm which restores a semantically correct structure in the original data set.
+        :return: None
+        """
         # Sort the data frame by b_number and datetime to have the bookings for each according to the timeline
         self.__gdf.sort_values(by=['b_number', 'datetime'], inplace=True)
         # Reset the index so that numpy indices and pandas indices are synchronized
