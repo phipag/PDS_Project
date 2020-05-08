@@ -57,7 +57,7 @@ class Transformer(AbstractValidator):
         self.__gdf['end_time'] = end_gdf['datetime']
         self.__gdf['end_position'] = end_gdf['geometry']
         self.__gdf['end_position_name'] = end_gdf['p_name']
-        self.__gdf['is_station'] = (start_gdf['p_place_type'] == 12) & (end_gdf['p_place_type'] == 12)
+        self.__gdf['is_station'] = (start_gdf['p_place_type'] != 12) & (end_gdf['p_place_type'] != 12)
         if validate:
             self.validate()
 
