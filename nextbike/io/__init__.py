@@ -5,6 +5,7 @@ from nextbike.io.input import (
 )
 from nextbike.io.output import (
     get_data_path,
-    save_model
+    save_model,
+    create_dir_if_not_exists
 )
 from nextbike.io.utils import get_data_path

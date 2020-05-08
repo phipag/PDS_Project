@@ -2,7 +2,7 @@ import os
 
 import geopandas as gpd
 
-from nextbike.io import get_data_path
+from nextbike.io import get_data_path, create_dir_if_not_exists
 from nextbike.preprocessing.AbstractValidator import AbstractValidator
 from nextbike.preprocessing.Preprocessor import Preprocessor
 
@@ -61,12 +61,17 @@ class Transformer(AbstractValidator):
         if validate:
             self.validate()
 
-    def save(self) -> None:
+    def save(self, filename: str = 'mannheim_transformed.csv') -> None:
         """
         Saves the transformed GeoDataFrame as csv-file to the disk.
         :return: None
+        :raises: UserWarning
         """
-        self.__gdf.to_csv(os.path.join(get_data_path(), 'output/mannheim_transformed.csv'), index=False)
+        if self.__gdf is None:
+            raise UserWarning('Attempting to save an empty data set. Did you transform it before?')
+        path = os.path.join(get_data_path(), 'output')
+        create_dir_if_not_exists(path)
+        self.__gdf.to_csv(os.path.join(path, filename), index=False)
 
     def validate(self) -> bool:
         """
