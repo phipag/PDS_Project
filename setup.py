@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 
 setup(
     name='PDS_Project',
@@ -6,7 +6,7 @@ setup(
     description='Semester Project - Programming Data Science',
     author='Student',
     author_email='student@uni-koeln.de',
-    packages=['nextbike'],
+    packages=find_namespace_packages(include=['*']),
     install_requires=['pandas', 'geopandas', 'scikit-learn', 'click', 'shapely'],
     entry_points={
         'console_scripts': ['nextbike=nextbike.cli:main']
