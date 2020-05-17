@@ -1,5 +1,5 @@
 from nextbike import (
     io,
-    model,
+    models,
     preprocessing
 )

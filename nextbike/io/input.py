@@ -2,7 +2,7 @@ import os
 import pickle
 
 import pandas as pd
-
+from sklearn.externals import joblib
 from nextbike.io.utils import get_data_path
 
 
@@ -15,7 +15,12 @@ def read_df(path=os.path.join(get_data_path(), 'input/<My_data>.csv'), **kwargs)
 
 
 def read_model():
-    path = os.path.join(get_data_path(), 'output/model.pkl')
+    path = os.path.join(get_data_path(), 'output/models.pkl')
     with open(path, 'rb') as f:
         model = pickle.load(f)
     return model
+
+def read_scaler():
+    path = os.path.join(get_data_path(), 'output/scaler.save')
+    scaler = joblib.load(path)
+    return scaler
