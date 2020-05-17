@@ -132,3 +132,5 @@ dmypy.json
 # Data files
 *.csv
 *.pkl
+/data/climate_data/rain.txt
+/data/climate_data/temp.txt
