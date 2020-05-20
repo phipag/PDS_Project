@@ -1,6 +1,5 @@
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import mean_absolute_error
-
 from nextbike import io
 from nextbike.preprocessing import Preprocessor, Transformer, Features
 from nextbike.models.Model import Model
@@ -61,28 +60,35 @@ class DurationModel(Model):
             self.target = contents['target']
             self.scaler = contents['scaler']
 
-    def train(self, n_jobs: int = -1, random_state: int = 123) -> None:
+    def train(self, n_jobs: int = -1, random_state: int = 123, train_filter=True) -> None:
         """
 
         :param n_jobs:
         :param random_state:
         :return:
         """
-        model = RandomForestRegressor(n_jobs=n_jobs, random_state=random_state)
+        duration_model = RandomForestRegressor(n_jobs=n_jobs, random_state=random_state)
         print('RandomForest model is initialized with n_jobs: {} and random_state: {}'.format(n_jobs, random_state))
         print('Conducting training on {} rows'.format(len(self.target)))
-        model.fit(self.features, self.target.ravel())
+        duration_model.fit(self.features, self.target.ravel())
         print('Training was successful.')
-        self.model = model
-        io.save_model(model)
+        self.model = duration_model
+        io.save_model(duration_model)
         print('The model was saved on disk.')
+
+        if train_filter:
+            rfc = RandomForestClassifier(n_jobs=-1)
+            X = self.prepared_data.drop(columns=['false_booking', 'duration'])
+            y = self.prepared_data['false_booking']
+            rfc.fit(X, y)
+            io.save_model(rfc, type='booking_filter')
 
     def save_predictions(self) -> None:
         path = os.path.join(io.get_data_path(), 'output')
         io.create_dir_if_not_exists(path)
         self.predicted_data.to_csv(os.path.join(path, 'predictions.csv'), index=False)
 
-    def predict(self, csv: str) -> None:
+    def predict(self, csv: str, apply_filter=True) -> None:
         """
 
         :return:

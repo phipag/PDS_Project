@@ -19,7 +19,13 @@ class PrepareForPrediction:
         raw_data = transformer.gdf
 
         if training:
-            col_to_drop = ['bike_number', 'start_position', 'end_time', 'end_position', 'end_position_name']
+            raw_data.loc[(raw_data['duration'] <= 180) | (
+                    raw_data["start_position"] == raw_data["end_position"]), 'false_booking'] = 1
+            raw_data.fillna(0.0, inplace=True)
+            false_bookings_series = raw_data['false_booking']
+
+            col_to_drop = ['bike_number', 'start_position', 'end_time', 'end_position', 'end_position_name',
+                           'false_booking']
             prediction_data = raw_data.drop(columns=col_to_drop)
 
             Q1 = prediction_data['duration'].quantile(0.25)
@@ -81,6 +87,9 @@ class PrepareForPrediction:
 
         prepared_data.fillna(0.0, inplace=True)
 
+        if training:
+            prepared_data = prepared_data.merge(false_bookings_series, left_index=True, right_index=True)
+
         features = prepared_data.drop(columns=['duration'])
         target = prepared_data['duration'].values.reshape(-1, 1)
 
@@ -92,6 +101,9 @@ class PrepareForPrediction:
             return {"raw_data": raw_data, "prepared_data": prepared_data, "features": features,
                     "target": target, "scaler": scaler}
         else:
+            svc = io.read_model(type='booking_filter')
+            false_bookings = svc.predict(features)
+            features = np.concatenate((features, np.vstack(false_bookings)), axis=1)
             features = scaler.transform(features)
             return {"raw_data": raw_data, "prepared_data": prepared_data, "features": features,
                     "target": target, "scaler": scaler}
