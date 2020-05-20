@@ -1,14 +1,12 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 from nextbike import io
 from nextbike.preprocessing import Transformer
 
 
 class PrepareForPrediction:
 
-    def duration_preparation(self, transformer: Transformer, training: bool = True,
-                             scaler: StandardScaler = None) -> dict:
+    def duration_preparation(self, transformer: Transformer, training: bool = True) -> dict:
         """
     
         :param scaler: 
@@ -28,12 +26,6 @@ class PrepareForPrediction:
                            'false_booking']
             prediction_data = raw_data.drop(columns=col_to_drop)
 
-            Q1 = prediction_data['duration'].quantile(0.25)
-            Q3 = prediction_data['duration'].quantile(0.75)
-            IQR = Q3 - Q1
-
-            mask = prediction_data['duration'].between((Q1 - 1.5 * IQR), (Q3 + 1.5 * IQR), inclusive=True)
-            prediction_data = prediction_data.loc[mask]
         else:
             col_to_drop = ['bike_number', 'start_position', 'end_time', 'end_position', 'end_position_name']
             prediction_data = raw_data.drop(columns=col_to_drop)
@@ -94,16 +86,12 @@ class PrepareForPrediction:
         target = prepared_data['duration'].values.reshape(-1, 1)
 
         if training:
-            scaler = StandardScaler().fit(features)
-            features = scaler.transform(features)
-            io.save_scaler(scaler)
-            print('Preparation was sccessful, scaler was saved on disk.')
+            print('Preparation was sccessful.')
             return {"raw_data": raw_data, "prepared_data": prepared_data, "features": features,
-                    "target": target, "scaler": scaler}
+                    "target": target}
         else:
-            svc = io.read_model(type='booking_filter')
-            false_bookings = svc.predict(features)
+            rfc = io.read_model(type='booking_filter')
+            false_bookings = rfc.predict(features)
             features = np.concatenate((features, np.vstack(false_bookings)), axis=1)
-            features = scaler.transform(features)
             return {"raw_data": raw_data, "prepared_data": prepared_data, "features": features,
-                    "target": target, "scaler": scaler}
+                    "target": target}

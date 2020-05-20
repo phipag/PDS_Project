@@ -12,7 +12,6 @@ class Model(ABC):
         self.predicted_data = None
         self.prepared_data = None
         self.model = None
-        self.scaler = None
         self.features = None
         self.target = None
 

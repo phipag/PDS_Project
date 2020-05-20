@@ -20,7 +20,6 @@ class DurationModel(Model):
         self.predicted_data = None
         self.prepared_data = None
         self.model = None
-        self.scaler = None
         self.features = None
         self.target = None
         self.predictions = None
@@ -52,13 +51,12 @@ class DurationModel(Model):
         else:
             print('Transformation was successful. Conducting feature engineering now.')
             engineer = Features.PrepareForPrediction()
-            contents = engineer.duration_preparation(transformer, training, self.scaler)
+            contents = engineer.duration_preparation(transformer, training)
 
             self.raw_data = contents['raw_data']
             self.prepared_data = contents['prepared_data']
             self.features = contents['features']
             self.target = contents['target']
-            self.scaler = contents['scaler']
 
     def train(self, n_jobs: int = -1, random_state: int = 123, train_filter=True) -> None:
         """
@@ -77,11 +75,14 @@ class DurationModel(Model):
         print('The model was saved on disk.')
 
         if train_filter:
-            rfc = RandomForestClassifier(n_jobs=-1)
-            X = self.prepared_data.drop(columns=['false_booking', 'duration'])
-            y = self.prepared_data['false_booking']
-            rfc.fit(X, y)
-            io.save_model(rfc, type='booking_filter')
+            self.train_filter()
+
+    def train_filter(self):
+        rfc = RandomForestClassifier(n_jobs=-1)
+        X = self.prepared_data.drop(columns=['false_booking', 'duration'])
+        y = self.prepared_data['false_booking']
+        rfc.fit(X, y)
+        io.save_model(rfc, type='booking_filter')
 
     def save_predictions(self) -> None:
         path = os.path.join(io.get_data_path(), 'output')
@@ -96,10 +97,6 @@ class DurationModel(Model):
         if self.model is None:
             print('This DurationModel instance does not have a model loaded. Loading model from "data/output.')
             self.model = io.read_model()
-
-        if self.scaler is None:
-            print('This DurationModel instance does not have a scaler loaded. Loading model from "data/output.')
-            self.scaler = io.read_scaler()
 
         self.load_from_csv(csv, training=False)
 
