@@ -134,3 +134,5 @@ dmypy.json
 *.pkl
 /data/climate_data/rain.txt
 /data/climate_data/temp.txt
+/test.py
+/scaler.save

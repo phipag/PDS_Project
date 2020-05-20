@@ -13,8 +13,8 @@ class Model(ABC):
         self.prepared_data = None
         self.model = None
         self.scaler = None
-        self.feature_vector = None
-        self.target_vector = None
+        self.features = None
+        self.target = None
 
     @abstractmethod
     def load_from_csv(self, csv) -> None:

@@ -1,2 +1,3 @@
 from nextbike.preprocessing.Preprocessor import Preprocessor
 from nextbike.preprocessing.Transformer import Transformer
+from nextbike.preprocessing.Features import PrepareForPrediction
