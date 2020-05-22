@@ -46,14 +46,6 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def save_predictions(self) -> None:
-        """
-
-        :return:
-        """
-        pass
-
-    @abstractmethod
     def predict(self, path: str) -> None:
         """
 

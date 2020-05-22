@@ -86,23 +86,20 @@ class DurationModel(Model):
         rfc.fit(X, y)
         io.save_model(rfc, type='booking_filter')
 
-    def save_predictions(self) -> None:
-        path = os.path.join(io.get_data_path(), 'output')
-        io.create_dir_if_not_exists(path)
-        self.predicted_data.to_csv(os.path.join(path, 'predictions.csv'), index=False)
-
-    def predict(self, path: str, apply_filter=True) -> None:
+    def predict(self, path: str = None, apply_filter=True, save=False) -> None:
         """
 
         :param path:
         :param apply_filter:
+        :param save:
         :return:
         """
         if self.model is None:
             print('This DurationModel instance does not have a model loaded. Loading model from "data/output.')
             self.model = io.read_model()
 
-        self.load_from_csv(path, training=False)
+        if path is not None:
+            self.load_from_csv(path, training=False)
 
         self.predictions = self.model.predict(self.features)
 
@@ -110,7 +107,8 @@ class DurationModel(Model):
 
         self.predicted_data['Predictions'] = self.predictions
 
-        self.save_predictions()
+        if save:
+            io.save_predictions(self.predicted_data)
 
         return self.predicted_data
 

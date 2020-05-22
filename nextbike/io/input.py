@@ -15,11 +15,15 @@ def read_df(path=os.path.join(get_data_path(), 'input/<My_data>.csv'), **kwargs)
 
 def read_model(type='regressor'):
     if type == 'regressor':
-        path = os.path.join(get_data_path(), 'output/model.pkl')
+        path = os.path.join(get_data_path(), 'output/duration.pkl')
         with open(path, 'rb') as f:
             model = pickle.load(f)
     elif type == 'booking_filter':
         path = os.path.join(get_data_path(), 'output/booking_filter.pkl')
+        with open(path, 'rb') as f:
+            model = pickle.load(f)
+    elif type == 'classifier':
+        path = os.path.join(get_data_path(), 'output/destination.pkl')
         with open(path, 'rb') as f:
             model = pickle.load(f)
     return model
