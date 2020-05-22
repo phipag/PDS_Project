@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from nextbike.preprocessing import Transformer
 
 
 class Model(ABC):
@@ -14,21 +15,24 @@ class Model(ABC):
         self.model = None
         self.features = None
         self.target = None
+        self.predictions = None
 
     @abstractmethod
-    def load_from_csv(self, csv) -> None:
+    def load_from_csv(self, path: str = None, training: bool = True) -> None:
         """
 
-        :param csv:
+        :param path:
+        :param training:
         :return:
         """
         pass
 
     @abstractmethod
-    def load_from_transformer(self, transformer) -> None:
+    def load_from_transformer(self, transformer: Transformer, training: bool = True) -> None:
         """
 
         :param transformer:
+        :param training:
         :return:
         """
         pass
@@ -50,10 +54,14 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def predict(self, csv) -> None:
+    def predict(self, path: str) -> None:
         """
 
-        :param csv:
+        :param path:
         :return:
         """
+        pass
+
+    @abstractmethod
+    def training_score(self):
         pass

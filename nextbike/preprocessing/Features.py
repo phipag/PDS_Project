@@ -8,10 +8,9 @@ class PrepareForPrediction:
 
     def duration_preparation(self, transformer: Transformer, training: bool = True) -> dict:
         """
-    
-        :param scaler: 
-        :param training: 
+
         :param transformer:
+        :param training:
         :return:
         """
         raw_data = transformer.gdf

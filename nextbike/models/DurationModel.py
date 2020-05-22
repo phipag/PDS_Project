@@ -44,6 +44,7 @@ class DurationModel(Model):
         """
 
         :param transformer:
+        :param training:
         :return:
         """
         if not transformer.validate:
@@ -63,6 +64,7 @@ class DurationModel(Model):
 
         :param n_jobs:
         :param random_state:
+        :param train_filter:
         :return:
         """
         duration_model = RandomForestRegressor(n_jobs=n_jobs, random_state=random_state)
@@ -89,16 +91,18 @@ class DurationModel(Model):
         io.create_dir_if_not_exists(path)
         self.predicted_data.to_csv(os.path.join(path, 'predictions.csv'), index=False)
 
-    def predict(self, csv: str, apply_filter=True) -> None:
+    def predict(self, path: str, apply_filter=True) -> None:
         """
 
+        :param path:
+        :param apply_filter:
         :return:
         """
         if self.model is None:
             print('This DurationModel instance does not have a model loaded. Loading model from "data/output.')
             self.model = io.read_model()
 
-        self.load_from_csv(csv, training=False)
+        self.load_from_csv(path, training=False)
 
         self.predictions = self.model.predict(self.features)
 
