@@ -30,6 +30,7 @@ class Preprocessor(AbstractValidator):
     def load_gdf(self, path: str = None) -> None:
         """
         Reads the raw DataFrame, transforms it to a GeoDataFrame and initializes the __gdf property.
+        :type path: object A path that points to the .csv file
         :return: None
         """
         if path:
