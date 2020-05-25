@@ -41,3 +41,52 @@ transformer.transform()
 # filename parameter is optional
 transformer.save(filename='mannheim_transformed.csv')
 ```
+# Prediction Process
+## Duration Prediction
+### Loading Data
+From Transformer Objects
+```python
+model = DurationModel()
+model.load_from_transformer(t)
+```
+From a raw .csv file
+```python
+model = DurationModel()
+model.load_from_csv('data/input/mannheim.csv')
+```
+### Training
+```python
+model.train()
+```
+Calculate Training Score
+```python
+model.predict()
+model.training_score()
+```
+### Predict unseen Data
+```python
+predictor = DurationModel()
+predictor.predict('data/input/mannheim.csv')
+```
+## Destination Prediction
+### Train
+```python
+destinations = DestinationModel()
+destinations.load_from_transformer(t)
+
+destinations.train()
+```
+Calculate Training Score
+```python
+destinations.predict()
+destinations.training_score()
+```
+### Predict unseen Data
+```python
+destination_predictor = DestinationModel()
+destination_predictor.predict('data/input/mannheim.csv')
+```
+
+# Combine Predictions and Save
+combine_predictions()
+```

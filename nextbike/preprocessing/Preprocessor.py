@@ -27,12 +27,16 @@ class Preprocessor(AbstractValidator):
             raise UserWarning('Data frame is not initialized.')
         return self.__gdf
 
-    def load_gdf(self) -> None:
+    def load_gdf(self, path: str = None) -> None:
         """
         Reads the raw DataFrame, transforms it to a GeoDataFrame and initializes the __gdf property.
+        :type path: object A path that points to the .csv file
         :return: None
         """
-        df = read_df(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
+        if path:
+            df = read_df(path, index_col=0, parse_dates=['datetime'])
+        else:
+            df = read_df(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
         self.__gdf = gpd.GeoDataFrame(df, crs='EPSG:4326', geometry=gpd.points_from_xy(df['p_lng'], df['p_lat']))
 
     def clean_gdf(self, validate: bool = False) -> None:

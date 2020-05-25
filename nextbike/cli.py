@@ -1,13 +1,13 @@
 import click
 
-from nextbike import model
+from nextbike import models
 
 
 @click.command()
-@click.option('--train/--no-train', default=False, help='Train the model.')
+@click.option('--train/--no-train', default=False, help='Train the models.')
 def main(train):
     if train:
-        model.train()
+        models.train()
     else:
         print('You don\'t do anything.')
 
