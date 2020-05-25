@@ -2,10 +2,11 @@ import os
 import pickle
 
 import pandas as pd
+
 from nextbike.io.utils import get_data_path
 
 
-def read_df(path: str = os.path.join(get_data_path(), 'input/<My_data>.csv'), **kwargs) -> None:
+def read_df(path: str = os.path.join(get_data_path(), 'input/<My_data>.csv'), **kwargs) -> pd.DataFrame:
     """
     Method importing a DataFrame from a specified path
     :param path: A str pointing to the respective csv file
