@@ -12,14 +12,14 @@ from nextbike.preprocessing import Preprocessor, Transformer
 @click.option('--output', default='mannheim_transformed.csv', help='Filename of transformed data frame file.')
 def transform(filename, output):
     with yaspin(color='blue') as spinner:
-        spinner.text = 'Load data frame ...'
+        spinner.text = 'Loading data frame ...'
         preprocessor = Preprocessor()
         preprocessor.load_gdf(filename)
         spinner.write('Data frame loaded.')
-        spinner.text = 'Clean data frame ...'
+        spinner.text = 'Cleaning data frame ...'
         preprocessor.clean_gdf()
         spinner.write('Data frame cleaned.')
-        spinner.text = 'Translate to target format ...'
+        spinner.text = 'Translating to target format ...'
         transformer = Transformer(preprocessor)
         transformer.transform()
         spinner.write('Data frame transformed.')
