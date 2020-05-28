@@ -1,5 +1,6 @@
 import click
 
+from nextbike.cli.predict import predict
 from nextbike.cli.train import train
 from nextbike.cli.transform import transform
 
@@ -15,3 +16,4 @@ def cli():
 
 cli.add_command(transform)
 cli.add_command(train)
+cli.add_command(predict)
