@@ -14,6 +14,7 @@ def cli():
     pass
 
 
+# All sub-commands of the nextbike cli command
 cli.add_command(transform)
 cli.add_command(train)
 cli.add_command(predict)

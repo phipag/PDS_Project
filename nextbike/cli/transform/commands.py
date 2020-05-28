@@ -11,6 +11,13 @@ from nextbike.preprocessing import Preprocessor, Transformer
 @click.argument('filename', type=click.Path('rb'))
 @click.option('--output', default='mannheim_transformed.csv', help='Filename of transformed data frame file.')
 def transform(filename, output):
+    """
+    Transforms a given data frame to the target data format
+    :param filename: Path to the data frame which should be transformed
+    :param output: Filename of the output (please note that outputs are always saved to {project_dir}/data/output
+    because of permission safety)
+    :return: None
+    """
     with yaspin(color='blue') as spinner:
         spinner.text = 'Loading data frame ...'
         preprocessor = Preprocessor()
