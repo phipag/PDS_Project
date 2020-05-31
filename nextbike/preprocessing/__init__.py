@@ -1,3 +1,3 @@
+from nextbike.preprocessing.ParallelPreprocessor import ParallelPreprocessor
 from nextbike.preprocessing.Preprocessor import Preprocessor
 from nextbike.preprocessing.Transformer import Transformer
-

@@ -54,13 +54,13 @@ class Preprocessor(AbstractValidator):
         # Remove all trips of type 'first' and 'last'
         self._gdf = self._gdf[(self._gdf['trip'] != 'first') & (self._gdf['trip'] != 'last')]
         # Remove all trips outside of mannheim
-        self._geo_filter_mannhein_trips()
+        self._geo_filter_mannheim_trips()
         # Remove trips without corresponding start or end booking
         self.__fix_bookings()
         if validate:
             self.validate()
 
-    def _geo_filter_mannhein_trips(self) -> None:
+    def _geo_filter_mannheim_trips(self) -> None:
         """
         Removes all trips which are geographically outside of Mannheim
         :return: None
