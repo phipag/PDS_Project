@@ -1,7 +1,10 @@
+import os
+
 import click
 from yaspin import yaspin
 
-from nextbike.models import DurationModel
+from nextbike.io import get_data_path
+from nextbike.models import DurationModel, DestinationModel
 
 
 @click.command()
@@ -14,8 +17,11 @@ def predict(filename):
     :return: None
     """
     with yaspin(color='blue') as spinner:
-        spinner.text = 'Performing prediction ...\t'
-        predictor = DurationModel()
-        predictor.predict(filename, save=True)
-        spinner.text = 'Prediction performed and saved to disk.'
+        spinner.text = 'Performing duration prediction ...\t'
+        duration_predictor = DurationModel()
+        duration_predictor.predict(filename, save=True)
+        spinner.text = 'Performing destination prediction ...\t'
+        destination_predictor = DestinationModel()
+        destination_predictor.predict(filename, save=True)
+        spinner.text = 'Predictions performed and saved to disk at {}.'.format(os.path.join(get_data_path(), 'output'))
         spinner.ok('✅ ')

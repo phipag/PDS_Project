@@ -1,7 +1,10 @@
+import os
+
 import click
 from yaspin import yaspin
 
-from nextbike.models import DurationModel
+from nextbike.io import get_data_path
+from nextbike.models import DurationModel, DestinationModel
 
 
 @click.command()
@@ -13,9 +16,17 @@ def train(filename):
     :return: None
     """
     with yaspin(color='blue') as spinner:
-        spinner.text = 'Training model ...\t'
-        model = DurationModel()
-        model.load_from_csv(filename)
-        model.train()
-        spinner.text = 'Model trained and saved to disk.'
+        spinner.text = 'Training duration model ...\t'
+        duration_model = DurationModel()
+        duration_model.load_from_csv(filename)
+        duration_model.train()
+        duration_model.predict()
+        duration_model.training_score()
+        spinner.text = 'Training destination model ...\t'
+        destination_model = DestinationModel()
+        destination_model.load_from_csv(filename)
+        destination_model.train()
+        destination_model.predict()
+        destination_model.training_score()
+        spinner.text = 'Models trained and saved to disk at {}.'.format(os.path.join(get_data_path(), 'output'))
         spinner.ok('✅ ')
