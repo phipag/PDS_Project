@@ -1,9 +1,10 @@
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import mean_absolute_error
+
 from nextbike import io
-from nextbike.preprocessing import Preprocessor, Transformer
-from nextbike.models.Model import Model
 from nextbike.models import utils
+from nextbike.models.Model import Model
+from nextbike.preprocessing import Preprocessor, Transformer
 
 
 class DurationModel(Model):
@@ -51,7 +52,7 @@ class DurationModel(Model):
         :return: None
         """
         if not transformer.validate():
-            print("Transformation was not successful.")
+            print('Transformation was not successful.')
         else:
             print('Transformation was successful. Conducting feature engineering now.')
             contents = utils.duration_preparation(transformer, training)
@@ -99,7 +100,8 @@ class DurationModel(Model):
         """
         # Initialize the model
         rfc = RandomForestClassifier(n_jobs=n_jobs, random_state=random_state)
-        print('RandomForestClassifier is initialized with n_jobs: {} and random_state: {}'.format(n_jobs, random_state))
+        print(
+            'RandomForestClassifier is initialized with n_jobs: {} and random_state: {}'.format(n_jobs, random_state))
 
         # Create the feature and target vector
         X = self.prepared_data.drop(columns=['false_booking', 'duration'])
@@ -139,7 +141,7 @@ class DurationModel(Model):
         # Conduct predictions
         print('Starting prediction process.')
         self.predictions = self.model.predict(self.features)
-        print('Prediction was successfull.')
+        print('Prediction was successful.')
 
         # Create a DataFrame containing predictions and the transformed data
         self.predicted_data = self.raw_data.copy()

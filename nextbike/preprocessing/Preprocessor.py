@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import geopandas as gpd
 import numpy as np
@@ -8,6 +9,8 @@ from nextbike.io import (
     read_df
 )
 from nextbike.preprocessing.AbstractValidator import AbstractValidator
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 class Preprocessor(AbstractValidator):

@@ -7,8 +7,8 @@ setup(
     author='Student',
     author_email='student@uni-koeln.de',
     packages=find_namespace_packages(include=['*']),
-    install_requires=['pandas', 'geopandas', 'scikit-learn', 'click', 'shapely'],
+    install_requires=['pandas', 'geopandas', 'shapely', 'scikit-learn', 'click', 'yaspin'],
     entry_points={
-        'console_scripts': ['nextbike=nextbike.cli:main']
+        'console_scripts': ['nextbike=nextbike.cli:cli']
     }
 )
