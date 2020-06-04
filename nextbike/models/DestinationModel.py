@@ -110,6 +110,10 @@ class DestinationModel(Model):
         else:
             print('Using data contained by the class instance.')
 
+        # Load labelencoder if class instance was not used for training
+        if self.encoder is None:
+            self.encoder = io.read_encoder()
+
         # Conduct predictions
         print('Starting prediction process.')
         self.predictions = self.model.predict(self.features)
@@ -117,7 +121,7 @@ class DestinationModel(Model):
 
         # Create a DataFrame containing predictions and the transformed data
         self.predicted_data = self.raw_data.copy()
-        self.predicted_data['destination'] = self.predictions
+        self.predicted_data['destination'] = self.encoder.inverse_transform(self.predictions)
 
         # Saving the predictions to disk
         if save:

@@ -3,6 +3,8 @@ import pickle
 from pathlib import Path
 import pandas as pd
 from nextbike.io import get_data_path
+import joblib
+from sklearn.preprocessing import LabelEncoder
 
 
 def save_model(model, type: str = 'regressor') -> None:
@@ -42,6 +44,16 @@ def save_predictions(predicted_data: pd.DataFrame, type: str = 'regressor') -> N
         predicted_data.to_csv(os.path.join(path, 'duration_predictions.csv'), index=False)
     elif type == 'classifier':
         predicted_data.to_csv(os.path.join(path, 'destination_predictions.csv'), index=False)
+
+
+def save_encoder(encoder: LabelEncoder) -> None:
+    """
+    Mehthod to save the classes of an encoder object for later use
+    :param encoder: The encoder object that was fit and used to transform target features in classification
+    :return: None
+    """
+    path = os.path.join(get_data_path(), 'output')
+    joblib.dump(encoder, os.path.join(path, 'classes.joblib'))
 
 
 def combine_predictions() -> None:

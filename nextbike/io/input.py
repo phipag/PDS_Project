@@ -1,9 +1,9 @@
 import os
 import pickle
-
+from sklearn.preprocessing import LabelEncoder
 import pandas as pd
-
 from nextbike.io.utils import get_data_path
+import joblib
 
 
 def read_df(path: str = os.path.join(get_data_path(), 'input/<My_data>.csv'), **kwargs) -> pd.DataFrame:
@@ -39,3 +39,13 @@ def read_model(type: str = 'regressor'):
         with open(path, 'rb') as f:
             model = pickle.load(f)
     return model
+
+
+def read_encoder() -> LabelEncoder:
+    """
+    Mehthod to read the classes of an encoder object for later use
+    :return: Encoder Object containing the correct classes
+    """
+    path = os.path.join(get_data_path(), 'output')
+    label_encoder = joblib.load(os.path.join(path, 'classes.joblib'))
+    return label_encoder

@@ -136,3 +136,4 @@ dmypy.json
 # Python Scripts
 /test.py
 
+/data/output/classes.joblib
