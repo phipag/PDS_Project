@@ -109,6 +109,9 @@ def classification_preparation(transformer: Transformer, training: bool = True) 
         le = preprocessing.LabelEncoder().fit(y)
         y = le.transform(y)
 
+        # Save encoder to disk for later usage
+        io.save_encoder(le)
+
         print('Preparation was successful.')
 
         return {'raw_data': raw_data, 'prepared_data': prediction_data, 'features': features,
