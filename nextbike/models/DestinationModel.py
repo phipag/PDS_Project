@@ -1,9 +1,10 @@
-from nextbike.models.Model import Model
-from nextbike.models import utils
-from nextbike.preprocessing import Preprocessor, Transformer
 from sklearn.ensemble import RandomForestClassifier
-from nextbike import io
 from sklearn.metrics import classification_report
+
+from nextbike import io
+from nextbike.models import utils
+from nextbike.models.Model import Model
+from nextbike.preprocessing import Preprocessor, Transformer
 
 
 class DestinationModel(Model):
@@ -96,21 +97,25 @@ class DestinationModel(Model):
         :param save: A boolean whether predicted data should be saved to output directory
         :return: A DataFrame containing the raw data as well as predictions
         """
-        # Load duration prediction model if class instance was not used for training
-        if self.model is None:
-            print('This DestinationModel instance does not have a model loaded. Loading model from "data/output".')
-            self.model = io.read_model(type='classifier')
+        # Try to load duration prediction model if class instance was not used for training
+        try:
+            if self.model is None:
+                print('This DestinationModel instance does not have a model loaded. Loading model from "data/output".')
+                self.model = io.read_model(type='classifier')
+        except FileNotFoundError:
+            raise FileNotFoundError('No destination model trained yet. Please train a model first.')
 
         # Predict new data if class instance was not used for training
         if path is not None:
             print('A path was specified. Initiating transformation and preparation steps.')
             self.load_from_csv(path, training=False)
         elif self.features is None:
-            raise BaseException('This instance does not contain any data. You have to load data by specifying a path.')
+            raise BaseException(
+                'This instance does not contain any data. You have to load data by specifying a path.')
         else:
             print('Using data contained by the class instance.')
 
-        # Load labelencoder if class instance was not used for training
+        # Load label encoder if class instance was not used for training
         if self.encoder is None:
             self.encoder = io.read_encoder()
 
