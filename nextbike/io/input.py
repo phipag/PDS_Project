@@ -1,6 +1,6 @@
 import os
 import pickle
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import pandas as pd
 from nextbike.io.utils import get_data_path
 import joblib
@@ -41,11 +41,17 @@ def read_model(type: str = 'regressor'):
     return model
 
 
-def read_encoder() -> LabelEncoder:
+def read_encoder(type: str = 'label') -> LabelEncoder or OneHotEncoder:
     """
     Mehthod to read the classes of an encoder object for later use
     :return: Encoder Object containing the correct classes
     """
     path = os.path.join(get_data_path(), 'output')
-    label_encoder = joblib.load(os.path.join(path, 'classes.joblib'))
-    return label_encoder
+    if type == 'label':
+        encoder = joblib.load(os.path.join(path, 'classes.joblib'))
+    elif type == 'season':
+        encoder = joblib.load(os.path.join(path, 'season.joblib'))
+    elif type == 'station':
+        encoder = joblib.load(os.path.join(path, 'station.joblib'))
+
+    return encoder

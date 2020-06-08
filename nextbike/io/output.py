@@ -46,14 +46,19 @@ def save_predictions(predicted_data: pd.DataFrame, type: str = 'regressor') -> N
         predicted_data.to_csv(os.path.join(path, 'destination_predictions.csv'), index=False)
 
 
-def save_encoder(encoder: LabelEncoder) -> None:
+def save_encoder(encoder: LabelEncoder, type: str = 'label') -> None:
     """
     Mehthod to save the classes of an encoder object for later use
     :param encoder: The encoder object that was fit and used to transform target features in classification
     :return: None
     """
     path = os.path.join(get_data_path(), 'output')
-    joblib.dump(encoder, os.path.join(path, 'classes.joblib'))
+    if type == 'label':
+        joblib.dump(encoder, os.path.join(path, 'classes.joblib'))
+    elif type == 'season':
+        joblib.dump(encoder, os.path.join(path, 'season.joblib'))
+    elif type == 'station':
+        joblib.dump(encoder, os.path.join(path, 'station.joblib'))
 
 
 def combine_predictions() -> None:

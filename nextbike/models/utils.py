@@ -53,7 +53,7 @@ def duration_preparation(transformer: Transformer, training: bool = True) -> dic
 
         # Perform feature engineering using the dedicated methods
         prediction_data = create_time_features(prediction_data, sin_cos_transform=True)
-        prepared_data = create_dummy_features(prediction_data)
+        prepared_data = create_dummy_features(prediction_data, training)
 
         # Create feature vector and predict and concatenate false bookings using the previously trained classifier
         features = prepared_data.copy()
@@ -190,18 +190,40 @@ def create_time_features(prediction_data: pd.DataFrame, sin_cos_transform: bool 
     return prediction_data
 
 
-def create_dummy_features(prediction_data: pd.DataFrame) -> pd.DataFrame:
+def create_dummy_features(prediction_data: pd.DataFrame, training: bool = True) -> pd.DataFrame:
     """
     A dedicated method for the creation of one-hot-encoded binary features. If needed transforms real stations and
     season.
     :param prediction_data: A DataFrame containing the pre-prepared data
     :return: DataFrame containing the pre-prepared data as well as the engineered features
     """
-    # Create dummies of all real stations
-    station_dummies = pd.get_dummies(prediction_data.loc[prediction_data['is_station'] == True, 'start_position_name'])
 
-    # Create dummies of the seasons
-    seasonal_dummies = pd.get_dummies(prediction_data['season'])
+    if training:
+        # Create dummies of all real stations
+        station_ohe = preprocessing.OneHotEncoder(handle_unknown='ignore', sparse=False)
+        station_dummies = station_ohe.fit_transform(
+            prediction_data.loc[prediction_data['is_station'] == True, 'start_position_name'].to_numpy().reshape(-1, 1))
+        station_dummies = pd.DataFrame(station_dummies, columns=station_ohe.get_feature_names())
+        # Save station encoder to disk for later usage
+        io.save_encoder(station_ohe, type='station')
+
+        # Create dummies of the seasons
+        seasonal_ohe = preprocessing.OneHotEncoder(handle_unknown='ignore', sparse=False)
+        seasonal_dummies = seasonal_ohe.fit_transform(prediction_data['season'].to_numpy().reshape(-1, 1))
+        seasonal_dummies = pd.DataFrame(station_dummies, columns=seasonal_ohe.get_feature_names())
+        # Save season encoder to disk for later usage
+        io.save_encoder(seasonal_ohe, type='season')
+    else:
+        # Read station encoder from disk
+        station_ohe = io.read_encoder(type='station')
+        station_dummies = station_ohe.transform(
+            prediction_data.loc[prediction_data['is_station'] == True, 'start_position_name'].to_numpy().reshape(-1, 1))
+        station_dummies = pd.DataFrame(station_dummies, columns=station_ohe.get_feature_names())
+
+        # Read season encoder from disk
+        seasonal_ohe = io.read_encoder(type='season')
+        seasonal_dummies = seasonal_ohe.transform(prediction_data['season'].to_numpy().reshape(-1, 1))
+        seasonal_dummies = pd.DataFrame(station_dummies, columns=seasonal_ohe.get_feature_names())
 
     # Drop season and station names as no longer needed
     prediction_data.drop(columns=['season', 'start_position_name'], axis=1, inplace=True)
@@ -209,5 +231,6 @@ def create_dummy_features(prediction_data: pd.DataFrame) -> pd.DataFrame:
     # Concatenate the dummy variable vectors to the DataFrame and fill up empty cells which do not relate to a station
     prediction_data = pd.concat([prediction_data, seasonal_dummies, station_dummies], axis=1)
     prediction_data.fillna(0.0, inplace=True)
+    print(prediction_data)
 
     return prediction_data
