@@ -117,5 +117,9 @@ class Preprocessor(AbstractValidator):
             if trips[i] == trips[i + 1]:
                 i_delete = i if trips[i] == 'start' else i + 1
                 delete_indices.add(i_delete)
+        # Another special case: Omit the very last entry if it is of trip type 'start'
+        if trips[len(trips) - 1] == 'start':
+            delete_indices.add(len(trips) - 1)
+
         # Call pandas' internal drop method once in the end to hand over the execution to Cython again
         self._gdf.drop(delete_indices, inplace=True)
