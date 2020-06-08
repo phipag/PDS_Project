@@ -5,7 +5,7 @@ from yaspin import yaspin
 
 from nextbike.io import get_data_path
 from nextbike.models import DurationModel, DestinationModel
-
+from nextbike.preprocessing import Preprocessor, Transformer
 
 @click.command()
 @click.argument('filename', type=click.Path('rb'))
@@ -16,15 +16,21 @@ def train(filename):
     :return: None
     """
     with yaspin(color='blue') as spinner:
+        spinner.text = 'Conducting Pre-Processing and Transformation steps ...\t'
+        preprocessor = Preprocessor()
+        preprocessor.load_gdf(filename)
+        preprocessor.clean_gdf()
+        transformer = Transformer(preprocessor)
+        transformer.transform()
         spinner.text = 'Training duration model ...\t'
         duration_model = DurationModel()
-        duration_model.load_from_csv(filename)
+        duration_model.load_from_transformer(transformer, training=True)
         duration_model.train()
         duration_model.predict()
         duration_model.training_score()
         spinner.text = 'Training destination model ...\t'
         destination_model = DestinationModel()
-        destination_model.load_from_csv(filename)
+        destination_model.load_from_transformer(transformer, training=True)
         destination_model.train()
         destination_model.predict()
         destination_model.training_score()
