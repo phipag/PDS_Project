@@ -231,6 +231,5 @@ def create_dummy_features(prediction_data: pd.DataFrame, training: bool = True) 
     # Concatenate the dummy variable vectors to the DataFrame and fill up empty cells which do not relate to a station
     prediction_data = pd.concat([prediction_data, seasonal_dummies, station_dummies], axis=1)
     prediction_data.fillna(0.0, inplace=True)
-    print(prediction_data)
 
     return prediction_data
