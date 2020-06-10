@@ -50,14 +50,16 @@ Data can be loaded from a valid `Transformer` instance or from a file path. The 
 
 Data loading with the `Transformer`:
 ```python
-model = DurationModel()
-model.load_from_transformer(t)
+from nextbike.models import DurationModel
+duration_model = DurationModel()
+duration_model.load_from_transformer(transformer)
 ```
 
 Data loading from a file path to the raw input data:
 ```python
-model = DurationModel()
-model.load_from_csv('data/input/mannheim.csv')
+from nextbike.models import DurationModel
+duration_model = DurationModel()
+duration_model.load_from_csv('data/input/mannheim.csv')
 ```
 
 #### Training
@@ -65,13 +67,13 @@ Training can be conducted on an instantiated `Model` instance, in this case a `D
 
 Training the model:
 ```python
-model.train()
+duration_model.train()
 ```
 
 Printing the training score after prediction:
 ```python
-model.predict() # Conduct predictions on the training data
-model.training_score() # Print the training score to the console
+duration_model.predict() # Conduct predictions on the training data
+duration_model.training_score() # Print the training score to the console
 ```
 
 #### Predict unseen Data
@@ -79,8 +81,8 @@ Prediction for unseen data can be conducted on a `Model` instance by simply call
 
 Prediction can be conducted as follows:
 ```python
-predictor = DurationModel() # Create a DurationModel instance
-predictor.predict('data/input/mannheim_test.csv') # Predict unseen data
+duration_model = DurationModel() # Create a DurationModel instance
+duration_model.predict('data/input/mannheim_test.csv') # Predict unseen data with the previously trained model
 ```
 
 ## Destination Prediction
