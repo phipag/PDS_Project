@@ -2,7 +2,7 @@
  Within the same folder as ```setup.py``` run ```pip3 install .``` to install the package. Use flag ```-e``` to install in development mode. Import via ```import nextbike```. 
 
 # Project Report
-Please access the project report via the root directory of this repository or via this link: [Report.pdf]()
+Please access the project report via the root directory of this repository or via this link: [Report.pdf](Report.pdf)
 
 # Quick Start
 
