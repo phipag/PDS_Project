@@ -1,11 +1,15 @@
 # Programming Data Science – Semester Project
- 
-Within the same folder as ```setup.py``` run ```pip install .``` to install the package. Use flag ```-e``` to install in development mode. In subdirectory ```notebooks``` run ```pip install ..``` to install the package. Import via ```import nextbike```. 
+ Within the same folder as ```setup.py``` run ```pip3 install .``` to install the package. Use flag ```-e``` to install in development mode. Import via ```import nextbike```. 
 
-# Documentation
+# Project Report
+[report.pdf]()
+
+# Quick Start
 #### Table of Contents
 * [Jupyter Notebooks](#jupyter-notebooks)
-* [Preprocessing Package](#preprocessing-package)  
+* [Preprocessing Package](#preprocessing-package)
+* [Command Line Interface (CLI)](#command-line-interface-cli)
+
 ## Jupyter Notebooks
 Install the `requirements.txt` via `pip` to use the Jupyter Notebooks of the `notebooks` directory.
 ```shell script
@@ -87,6 +91,22 @@ destination_predictor = DestinationModel()
 destination_predictor.predict('data/input/mannheim.csv')
 ```
 
-# Combine Predictions and Save
+### Combine Predictions and Save
+```python
 combine_predictions()
+```
+
+# Command Line Interface (CLI)
+The following CLI commands are available. Each command provides a helper text if you have problems using them.
+## Transform the Raw Data
+```bash
+nextbike transform [--output <output-path>] <data-path>
+```
+## Train the Duration and Destination Model
+```bash
+nextbike train <data-path>
+```
+## Predict new Data
+```bash
+nextbike predict <data-path>
 ```
