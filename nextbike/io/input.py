@@ -1,9 +1,11 @@
 import os
 import pickle
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-import pandas as pd
-from nextbike.io.utils import get_data_path
+
 import joblib
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
+from nextbike.io.utils import get_data_path
 
 
 def read_df(path: str = os.path.join(get_data_path(), 'input/<My_data>.csv'), **kwargs) -> pd.DataFrame:
@@ -23,7 +25,7 @@ def read_df(path: str = os.path.join(get_data_path(), 'input/<My_data>.csv'), **
 def read_model(type: str = 'regressor'):
     """
     Method for reading in pickled models
-    :param type: A string representing if type of model is related to duration, false booking or destination prediction
+    :param type: A string representing if type of model is related to duration, false booking or direction prediction
     :return: model instance
     """
     if type == 'regressor':
@@ -35,7 +37,7 @@ def read_model(type: str = 'regressor'):
         with open(path, 'rb') as f:
             model = pickle.load(f)
     elif type == 'classifier':
-        path = os.path.join(get_data_path(), 'output/destination.pkl')
+        path = os.path.join(get_data_path(), 'output/direction.pkl')
         with open(path, 'rb') as f:
             model = pickle.load(f)
     return model

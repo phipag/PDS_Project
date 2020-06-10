@@ -29,11 +29,11 @@ def train(filename):
         duration_model.train()
         duration_model.predict()
         duration_model.training_score()
-        spinner.text = 'Training destination model ...\t'
-        destination_model = DirectionModel()
-        destination_model.load_from_transformer(transformer, training=True)
-        destination_model.train()
-        destination_model.predict()
-        destination_model.training_score()
+        spinner.text = 'Training direction model ...\t'
+        direction_model = DirectionModel()
+        direction_model.load_from_transformer(transformer, training=True)
+        direction_model.train()
+        direction_model.predict()
+        direction_model.training_score()
         spinner.text = 'Models trained and saved to disk at {}.'.format(os.path.join(get_data_path(), 'output'))
         spinner.ok('✅ ')

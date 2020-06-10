@@ -28,9 +28,9 @@ def predict(filename):
         duration_predictor = DurationModel()
         duration_predictor.load_from_transformer(transformer, training=False)
         duration_predictor.predict(save=True)
-        spinner.text = 'Performing destination prediction ...\t'
-        destination_predictor = DirectionModel()
-        destination_predictor.load_from_transformer(transformer, training=False)
-        destination_predictor.predict(save=True)
+        spinner.text = 'Performing direction prediction ...\t'
+        direction_predictor = DirectionModel()
+        direction_predictor.load_from_transformer(transformer, training=False)
+        direction_predictor.predict(save=True)
         spinner.text = 'Predictions performed and saved to disk at {}.'.format(os.path.join(get_data_path(), 'output'))
         spinner.ok('✅ ')
