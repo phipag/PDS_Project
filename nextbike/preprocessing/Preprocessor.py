@@ -3,6 +3,7 @@ import warnings
 
 import geopandas as gpd
 import numpy as np
+import pandas as pd
 
 from nextbike.io import (
     get_data_path,
@@ -11,6 +12,22 @@ from nextbike.io import (
 from nextbike.preprocessing.AbstractValidator import AbstractValidator
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
+
+
+# Must not be in the Preprocessor class, because it does not need access to the instance (static method)
+def validate_input(df: pd.DataFrame) -> None:
+    """
+    Validates that all columns of the input data format match the required column names by the package
+    :param df: Input DataFrame
+    :return: None
+    :exception: ValueError
+    """
+    required_columns = {'p_spot', 'p_place_type', 'datetime', 'b_number', 'trip', 'p_uid', 'p_bikes', 'p_lat',
+                        'b_bike_type', 'p_name', 'p_number', 'p_lng', 'p_bike'}
+    for column in df.columns:
+        if column not in required_columns:
+            raise ValueError(
+                'The input data set does not match the required column format. Please make sure that it is valid.')
 
 
 class Preprocessor(AbstractValidator):
@@ -40,6 +57,7 @@ class Preprocessor(AbstractValidator):
             df = read_df(path, index_col=0, parse_dates=['datetime'])
         else:
             df = read_df(os.path.join(get_data_path(), 'input/mannheim.csv'), index_col=0, parse_dates=['datetime'])
+        validate_input(df)
         self._gdf = gpd.GeoDataFrame(df, crs='EPSG:4326', geometry=gpd.points_from_xy(df['p_lng'], df['p_lat']))
 
     def clean_gdf(self, validate: bool = False) -> None:
