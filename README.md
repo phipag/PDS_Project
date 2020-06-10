@@ -85,19 +85,19 @@ duration_model = DurationModel() # Create a DurationModel instance
 duration_model.predict('data/input/mannheim_test.csv') # Predict unseen data with the previously trained model
 ```
 
-## Destination Prediction
-Destination prediction works exactly the same way as duration prediction. Use the `nextbike.models.DestinationModel` instance instead of the `nextbike.models.DurationModel`. All methods are the same as for the `DurationModel`.
+## Direction Prediction
+Direction prediction works exactly the same way as duration prediction. Use the `nextbike.models.DirectionModel` instance instead of the `nextbike.models.DurationModel`. All methods are the same as for the `DurationModel`.
 
 For example:
 ```python
-from nextbike.models import DestinationModel
-destination_model = DestinationModel()
-destination_model.load_from_transformer(transformer)
+from nextbike.models import DirectionModel
+direction_model = DirectionModel()
+direction_model.load_from_transformer(transformer)
 ...
 ```
 
 ## Combine both predictions into one data set
-Currently, the destination and duration prediction models save to separate data sets to disk. To combine them automatically into one data set, you can use `combine_predictions()` as follows:
+Currently, the direction and duration prediction models save to separate data sets to disk. To combine them automatically into one data set, you can use `combine_predictions()` as follows:
 ```python
 from nextbike.io import combine_predictions()
 combine_predictions()
@@ -110,7 +110,7 @@ The following CLI commands are available. Each command provides a helper text if
 ```bash
 nextbike transform [--output <output-path>] <data-path>
 ```
-### Train the Duration and Destination Model
+### Train the Duration and Direction Model
 ```bash
 nextbike train <data-path>
 ```
