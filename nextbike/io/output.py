@@ -1,17 +1,19 @@
 import os
 import pickle
 from pathlib import Path
-import pandas as pd
-from nextbike.io import get_data_path
+
 import joblib
+import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+
+from nextbike.io import get_data_path
 
 
 def save_model(model, type: str = 'regressor') -> None:
     """
     Method for saving trained models to disc.
     :param model: A trained model instance
-    :param type: A string representing if type of model is related to duration, false booking or destination prediction
+    :param type: A string representing if type of model is related to duration, false booking or direction prediction
     :return: None
     """
     if type == 'regressor':
@@ -19,7 +21,7 @@ def save_model(model, type: str = 'regressor') -> None:
     elif type == 'booking_filter':
         pickle.dump(model, open(os.path.join(get_data_path(), 'output/booking_filter.pkl'), 'wb'))
     elif type == 'classifier':
-        pickle.dump(model, open(os.path.join(get_data_path(), 'output/destination.pkl'), 'wb'))
+        pickle.dump(model, open(os.path.join(get_data_path(), 'output/direction.pkl'), 'wb'))
 
 
 def create_dir_if_not_exists(path: str) -> None:
@@ -35,7 +37,7 @@ def save_predictions(predicted_data: pd.DataFrame, type: str = 'regressor') -> N
     """
     Method that saves DataFrames containing the raw data as well as predictions
     :param predicted_data: A DataFrame containing raw data and predictions
-    :param type: A string representing if type of model is related to duration, false booking or destination prediction
+    :param type: A string representing if type of model is related to duration, false booking or direction prediction
     :return: None
     """
     path = os.path.join(get_data_path(), 'output')
@@ -43,7 +45,7 @@ def save_predictions(predicted_data: pd.DataFrame, type: str = 'regressor') -> N
     if type == 'regressor':
         predicted_data.to_csv(os.path.join(path, 'duration_predictions.csv'), index=False)
     elif type == 'classifier':
-        predicted_data.to_csv(os.path.join(path, 'destination_predictions.csv'), index=False)
+        predicted_data.to_csv(os.path.join(path, 'direction_predictions.csv'), index=False)
 
 
 def save_encoder(encoder: LabelEncoder, type: str = 'label') -> None:
@@ -63,7 +65,7 @@ def save_encoder(encoder: LabelEncoder, type: str = 'label') -> None:
 
 def combine_predictions() -> None:
     """
-    Method combining duration and destination prediction and saving the file to disc.
+    Method combining duration and direction prediction and saving the file to disc.
     :return: None
     """
     # Trying to load data from duration prediction
@@ -73,14 +75,14 @@ def combine_predictions() -> None:
         print('Data from duration prediction could not be loaded.')
         raise e
 
-    # Trying to load data from destination prediction
+    # Trying to load data from direction prediction
     try:
-        destination_predictions = pd.read_csv(os.path.join(get_data_path(), 'output/destination_predictions.csv'))
+        direction_predictions = pd.read_csv(os.path.join(get_data_path(), 'output/direction_predictions.csv'))
     except Exception as e:
-        print('Data from destination prediction could not be loaded.')
+        print('Data from direction prediction could not be loaded.')
         raise e
 
     # Concatenating both DataFrames and save them to disk
-    final_df = pd.concat([duration_predictions, destination_predictions['destination']], axis=1)
+    final_df = pd.concat([duration_predictions, direction_predictions['direction']], axis=1)
     final_df.to_csv(os.path.join(get_data_path(), 'output/final_predictions.csv'))
     print('Prediction data was combined and saved to disc.')

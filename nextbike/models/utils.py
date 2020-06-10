@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
+from sklearn import preprocessing
 
 from nextbike import io
 from nextbike.preprocessing import Transformer
-from sklearn import preprocessing
 
 
 def duration_preparation(transformer: Transformer, training: bool = True) -> dict:
@@ -69,7 +69,7 @@ def duration_preparation(transformer: Transformer, training: bool = True) -> dic
 
 def classification_preparation(transformer: Transformer, training: bool = True) -> dict:
     """
-    Static method that that performs feature engineering steps for destination prediction and training. The following
+    Static method that that performs feature engineering steps for direction prediction and training. The following
     features are engineered:
         - Periodic quantities (Hour, Week, Season) that are transformed using the sin-cos transformation so that time
         steps have the right distance to each other
@@ -87,25 +87,25 @@ def classification_preparation(transformer: Transformer, training: bool = True) 
                            'Universitätsklinik Mannheim - CampusRad', 'Hochschule Mannheim']
 
     if training:
-        # Assign trip destination labels for all trips there are four classes in total:
+        # Assign trip direction labels for all trips there are four classes in total:
         # ['to_university', 'from_unversity','false', 'not_university']
-        raw_data.loc[(raw_data['start_position_name'].isin(university_stations)), 'destination'] = 'to_university'
-        raw_data.loc[(raw_data['end_position_name'].isin(university_stations)), 'destination'] = 'from_university'
+        raw_data.loc[(raw_data['start_position_name'].isin(university_stations)), 'direction'] = 'to_university'
+        raw_data.loc[(raw_data['end_position_name'].isin(university_stations)), 'direction'] = 'from_university'
         raw_data.loc[(raw_data['duration'] <= 180) & (
-                raw_data['start_position'] == raw_data['end_position']), 'destination'] = 'false'
+                raw_data['start_position'] == raw_data['end_position']), 'direction'] = 'false'
         raw_data.fillna('not_university', inplace=True)
 
         # Keep only usable columns for training
-        prediction_data = raw_data[['start_time', 'weekend', 'is_station', 'destination']].copy()
+        prediction_data = raw_data[['start_time', 'weekend', 'is_station', 'direction']].copy()
 
         # Perform feature engineering using the dedicated methods
         prediction_data = create_time_features(prediction_data, sin_cos_transform=False, season_as_ohe=False)
 
         # Create the feature vector
-        features = prediction_data.drop(columns=['destination', 'start_time'])
+        features = prediction_data.drop(columns=['direction', 'start_time'])
 
         # Create the target vector and transform it to ordinal labels
-        y = prediction_data['destination']
+        y = prediction_data['direction']
         le = preprocessing.LabelEncoder().fit(y)
         y = le.transform(y)
 
