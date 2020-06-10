@@ -28,7 +28,7 @@ if the GeoDataFrame is not initialized.
 preprocessor.gdf
 ```
 
-The Transformation class transforms the preprocessed data set to the target data format. It needs a Preprocesssor
+The Transformation class transforms the preprocessed data set to the target data format. It needs a `Preprocesssor`
 instance. It checks automatically on instantiation if the `Preprocessor` has run successfully.
 ```python
 transformer = Transformer(preprocessor)
