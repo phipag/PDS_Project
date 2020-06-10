@@ -4,8 +4,9 @@ import click
 from yaspin import yaspin
 
 from nextbike.io import get_data_path
-from nextbike.models import DurationModel, DestinationModel
+from nextbike.models import DurationModel, DirectionModel
 from nextbike.preprocessing import Preprocessor, Transformer
+
 
 @click.command()
 @click.argument('filename', type=click.Path('rb'))
@@ -29,7 +30,7 @@ def train(filename):
         duration_model.predict()
         duration_model.training_score()
         spinner.text = 'Training destination model ...\t'
-        destination_model = DestinationModel()
+        destination_model = DirectionModel()
         destination_model.load_from_transformer(transformer, training=True)
         destination_model.train()
         destination_model.predict()

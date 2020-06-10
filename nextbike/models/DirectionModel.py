@@ -7,7 +7,7 @@ from nextbike.models.Model import Model
 from nextbike.preprocessing import Preprocessor, Transformer
 
 
-class DestinationModel(Model):
+class DirectionModel(Model):
     """
     Class for the training/prediction of destination models inheriting from the abstract class Model.
     """
@@ -100,7 +100,7 @@ class DestinationModel(Model):
         # Try to load duration prediction model if class instance was not used for training
         try:
             if self.model is None:
-                print('This DestinationModel instance does not have a model loaded. Loading model from "data/output".')
+                print('This DirectionModel instance does not have a model loaded. Loading model from "data/output".')
                 self.model = io.read_model(type='classifier')
         except FileNotFoundError:
             raise FileNotFoundError('No destination model trained yet. Please train a model first.')
